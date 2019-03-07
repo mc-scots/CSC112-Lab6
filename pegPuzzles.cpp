@@ -1,31 +1,20 @@
 // Play peg puzzles!
-// $Revision: 1.1 $
-//   $Log: pegPuzzles.cpp,v $
-//   Revision 1.1  2017/03/29 13:47:31  1ea49c2b19284e86b645075d033e28d0
-//   Initial revision
-//
-#include <iostream>
-#include "term.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Output.H>
 #include "insanity.h"
-#include "application.h"
 
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-    //make the parts
-    Insanity *puzzle = new Insanity();
-    Application *app = new Application();
-    
-    
-    //put them together
-    app->child(puzzle);
-    
-    //and go!
-    cout << cursorOff;
-    cout.flush();
-    app->eventLoop();
-    cout << cursorOn << normal << clearScreen << endl;
-    
-    return 0;
+    Fl_Window *window = new Fl_Window(400,200, "INSANITY!");
+    Insanity *puzzle = new Insanity(0,0,400,200);
+    window->end();
+
+    //show the window and enter the event loop
+    window->show(argc, argv);
+    return Fl::run();
 }
