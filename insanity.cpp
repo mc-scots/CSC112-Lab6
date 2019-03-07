@@ -13,6 +13,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Button.H>
 #include "insanity.h"
 
 using namespace std;
@@ -23,6 +24,14 @@ static void peg_callback(Peg *peg, Insanity *puzzle)
 {
     puzzle->peg_click(peg);
 }
+
+
+//a call back for solving
+static void solve_callback(Fl_Button *button, Insanity *puzzle)
+{
+    puzzle->solve();
+}
+
 
 //constructor
 Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
@@ -57,8 +66,13 @@ Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
     to_move = -1;
     
     //set up initial message
-    message = new Fl_Output(this->x()+5, this->y() + h - size - 5, w-10, size, defaultMessage.c_str());
+    message = new Fl_Output(this->x()+5, this->y() + h - size - 5, w-10, size);
     message->labelsize(size);
+    message->value(defaultMessage.c_str());
+
+    //create the solve button
+    Fl_Button *solve_button = new Fl_Button(this->x()+5, 5, 40, 20, "Solve");
+    solve_button->callback((Fl_Callback*) solve_callback, this);
 
     end();  //the group is built
 }
@@ -148,7 +162,6 @@ Insanity::move(int p1, int p2)
 void 
 Insanity::solve()
 {
-    message->value("Thinking...");
     sleep(2);
     message->value("Oh wait, you haven't taught me how to solve yet!");
 }
