@@ -29,16 +29,16 @@ puzzle for a few minutes to get a feel for how it works. It seems like
 it should be an easy task, but this puzzle can be delightfully
 frustrating\!
 
-When you are done playing with the puzzle, press ESC to exit the
-program. Now go and explore the code until you understand how it all
-works. The insanity.h, insanity.cpp, peg.h, and peg.cpp files are where
-all the key action is so look at those closely\!
+When you are done playing with the puzzle, press close the window exit
+the program. Now go and explore the code until you understand how it
+all works. The insanity.h, insanity.cpp, peg.h, and peg.cpp files are
+where all the key action is so look at those closely\!
 
 ## Writing the Solver
 
-Ok, so I'm sure you tried pressing the "s" key at some point during your
-explorations. Clearly, we have not yet implemented the solving part of
-this thing. That is the subject of this lab. You'll want to read these
+Ok, so I'm sure you tried clicking the "solve" button at some point during
+your explorations. Clearly, we have not yet implemented the solving part
+of this thing. That is the subject of this lab. You'll want to read these
 instructions carefully because in them I will tell you how to do this,
 but I am not going to give you all of the code. Think of it as a guided
 application of backtracking, which shouldn't be too much of a stretch
@@ -210,21 +210,19 @@ Insanity::solve()
     InsanitySolver *solution = new InsanitySolver(pegs);
     
     //show our thinking
-    message = "Thinking...";
+    message->value("Thinking...");
     display();
     if(solution->backtrack()) {
-        message = "Got it!  Here it is.";
+        message->value("Got it!  Here it is.");
     } else {
-        message = "Unsolvable fromt his position!";
+        message->value("Unsolvable fromt his position!");
     }
-    display();
     
     //animate the solution
     for(InsanitySolver *ptr = (InsanitySolver*) solution->nextStep();
         ptr != nullptr;  ptr=(InsanitySolver*) ptr->nextStep())
     {
         move(ptr->from(), ptr->to());
-        display();
         usleep(500000); 
     }
 }
