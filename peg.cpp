@@ -29,6 +29,11 @@ Peg::Peg(int x, int y, int s) : Fl_Widget(x, y, s, s)
 int
 Peg::handle(int event)
 {
+    //process release of mouse buttons
+    if(event == FL_RELEASE) {
+        do_callback();
+        return 1;
+    }
     return 0;
 }
 
@@ -36,22 +41,31 @@ Peg::handle(int event)
 void 
 Peg::draw()
 {
-
     //draw the outer ring
-    fl_color(FL_BLACK);
-    fl_circle(x()+5, y()+5, w()/2.0 - 5);
+    if(selected()) {
+      fl_color(FL_WHITE);
+    } else {
+      fl_color(FL_BLACK);
+    }
+    fl_pie(x()+5, y()+5, w()-10, h()-10, 0, 360.0);
 
-    /* //set the color of the peg
-    if(color() == RED) {
-        cout << red;
-    } else if(color() == BLUE) {
-        cout << blue;
-    } else if(color() == GREEN) {
-        cout << green;
-    } else if(color() == YELLOW) {
-        cout << yellow;
-    } */
-
+    //draw the inner circle
+    if(not present()) { 
+        fl_color(FL_BACKGROUND_COLOR);
+    } else {
+        if(color() == RED) {
+            fl_color(FL_RED);
+        } else if(color() == BLUE) {
+            fl_color(FL_BLUE);
+        } else if(color() == GREEN) {
+            fl_color(FL_GREEN);
+        } else if(color() == YELLOW) {
+            fl_color(FL_YELLOW);
+        } else {
+            fl_color(FL_FOREGROUND_COLOR);
+        }
+    }
+    fl_pie(x()+10, y()+10, w()-20, h()-20, 0, 360.0);
 }
 
 
