@@ -2,26 +2,22 @@
 // This is a widget for use in peg puzzle games.  It allows a peg to
 // be placed or removed from a slot.  The peg can also be set to 
 // one of several colors.
-// $Revision: 1.1 $
-//   $Log: peg.cpp,v $
-//   Revision 1.1  2017/03/29 13:47:31  1ea49c2b19284e86b645075d033e28d0
-//   Initial revision
-//
 /////////////////////////////////////////////////////////////////////
-#include <iostream>
+#include <FL/Fl.H>
+#include <FL/Fl_Widget.H>
+#include <FL/fl_draw.H>
 #include "peg.h"
-#include "term.h"
 
 using namespace std;
 
 //constructors
-Peg::Peg() : Peg(0, 0)
+Peg::Peg() : Peg(0, 0, 20)
 {
     //this constructor's work is done by the other version
 }
 
 
-Peg::Peg(int _x, int _y) : Widget(_x, _y, 3, 1)
+Peg::Peg(int x, int y, int s) : Fl_Widget(x, y, s, s)
 {
     _color = DEFAULT;
     _present = false;
@@ -30,21 +26,22 @@ Peg::Peg(int _x, int _y) : Widget(_x, _y, 3, 1)
 
 
 //widget functions
-void 
-Peg::handleEvent(Event *e)
+int
+Peg::handle(int event)
 {
-    //the peg does not respond to events
+    return 0;
 }
 
 
 void 
-Peg::display()
+Peg::draw()
 {
-    //set the cursor position and draw the beginning of the hole
-    cout << cursorPosition(x(), y());
-    cout << '(';
 
-    //set the color of the peg
+    //draw the outer ring
+    fl_color(FL_BLACK);
+    fl_circle(x()+5, y()+5, w()/2.0 - 5);
+
+    /* //set the color of the peg
     if(color() == RED) {
         cout << red;
     } else if(color() == BLUE) {
@@ -53,24 +50,8 @@ Peg::display()
         cout << green;
     } else if(color() == YELLOW) {
         cout << yellow;
-    }
+    } */
 
-    //if it is selected, display in reverse video
-    if(selected()) {
-        cout << reverseVideo;
-    }
-
-    //draw the peg itself
-    if(present()) {
-        cout << '@';
-    } else {
-        cout << ' ';
-    }
-
-    //finish out the hole in normal color
-    cout << normal << ')';
-
-    cout.flush();  //all done!
 }
 
 
@@ -79,7 +60,7 @@ void
 Peg::color(PegColor _color)
 {
     this->_color = _color;
-    display();
+    redraw();
 }
 
 
@@ -95,7 +76,7 @@ void
 Peg::present(bool _present)
 {
     this->_present = _present;
-    display();
+    redraw();
 }
 
 
@@ -112,7 +93,7 @@ void
 Peg::selected(bool _selected)
 {
     this->_selected = _selected;
-    display();
+    redraw();
 }
 
 

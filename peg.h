@@ -2,28 +2,24 @@
 // This is a widget for use in peg puzzle games.  It allows a peg to
 // be placed or removed from a slot.  The peg can also be set to 
 // one of several colors.
-// $Revision: 1.1 $
-//   $Log: peg.h,v $
-//   Revision 1.1  2017/03/29 13:47:31  1ea49c2b19284e86b645075d033e28d0
-//   Initial revision
-//
 /////////////////////////////////////////////////////////////////////
 #ifndef PEG_H
 #define PEG_H
-#include "widget.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Widget.H>
 
 enum PegColor { DEFAULT, RED, BLUE, GREEN, YELLOW };
 
-class Peg : public Widget
+class Peg : public Fl_Widget
 {
 public:
     //constructors
     Peg();
-    Peg(int _x, int _y);
+    Peg(int x, int y, int s);
 
     //widget functions
-    virtual void handleEvent(Event *e);
-    virtual void display();
+    virtual int handle(int event);
+    virtual void draw();
 
     //handle peg color
     virtual void color(PegColor _color);
@@ -34,7 +30,7 @@ public:
     virtual bool present();
 
     //pegs can also be selected, this causes them to 
-    //display in reverse video
+    //display with a highlighted ring
     virtual void selected(bool _selected);
     virtual bool selected();
 
