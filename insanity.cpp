@@ -10,25 +10,30 @@
 #include <iomanip>
 #include <algorithm>
 #include <unistd.h>
-#include "term.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Widget.H>
 #include "insanity.h"
-#include "application.h"
 
 using namespace std;
-static string defaultMessage = "Arrows to move cursor, Enter to select, s to solve";
+static string defaultMessage = "INSANITY! -- GOOD LUCK";
 
 //constructor
-Insanity::Insanity() : Widget(1, 1, 53, 6)
+Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
 {
-    int _x, _y; //screen position of the pegs
+    int sx, sy; //screen position of the pegs
+    int size;   //size of the pegs
 
-    _x = 4;
-    _y = 3;
+    //compute the size
+    size=w/10;
+
+    sx = this->x();
+    sy = this->y() + h/2 - size/2;
 
     //set up the peg board
     for(int i=0; i<10; i++) {
-        pegs.push_back(new Peg(_x, _y));        
-        _x += 5;
+        pegs.push_back(new Peg(sx, sy, size));        
+        sx += size;
 
         //red pegs on the left, green pegs on the right
         if(i<4) {
@@ -41,12 +46,13 @@ Insanity::Insanity() : Widget(1, 1, 53, 6)
     }
     
     //set up initial selection
-    cursor = 4;
-    toMove = -1;
-    pegs[cursor]->selected(true);
+    to_move = -1;
     
     //set up initial message
-    message = defaultMessage;
+    message = new Fl_Output(this->x()+5, this->y() + h - size - 5, w-10, size, defaultMessage.c_str());
+    message->labelsize(size);
+
+    end();  //the group is built
 }
 
 
@@ -61,6 +67,7 @@ Insanity::~Insanity()
 
 
 //widget functions
+/*
 void 
 Insanity::handleEvent(Event *e)
 {
@@ -140,25 +147,19 @@ Insanity::display()
     //flush the buffer
     cout.flush();
 }
-
+*/
 
 //insanity functions
 
 //move the cursor to a peg
 void 
-Insanity::selectPeg(int cursor)
+Insanity::select_peg(int cursor)
 {
-    //stand firm on invalid moves
-    if(cursor < 0 or cursor >= pegs.size()) {
-        return;
-    }
-    
     //first, we deselect the current peg
-    pegs[this->cursor]->selected(false);
+    pegs[this->to_move]->selected(false);
     
     //next, we select our peg
-    this->cursor = cursor;
-    pegs[this->cursor]->selected(true);
+    pegs[cursor]->selected(true);
 }
 
 
@@ -195,11 +196,9 @@ Insanity::move(int p1, int p2)
 void 
 Insanity::solve()
 {
-    message = "Thinking...";
-    display();
+    message->value("Thinking...");
     sleep(2);
-    message = "Oh wait, you haven't taught me how to solve yet!";
-    display();
+    message->value("Oh wait, you haven't taught me how to solve yet!");
 }
 
 
