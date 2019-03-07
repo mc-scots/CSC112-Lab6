@@ -58,7 +58,6 @@ Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
             pegs[i]->color(GREEN);
             pegs[i]->present(true);
         }
-        pegs[i]->user_data((void *) i);
         pegs[i]->callback((Fl_Callback*) peg_callback, this);
     }
     
