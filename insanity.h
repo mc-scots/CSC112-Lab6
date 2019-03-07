@@ -20,6 +20,7 @@ public:
     ~Insanity();
 
     //insanity functions
+    virtual void peg_click(Peg *peg);
     virtual void select_peg(int cursor);
     virtual bool move(int p1, int p2);
     virtual void solve();

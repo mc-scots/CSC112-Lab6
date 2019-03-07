@@ -19,9 +19,9 @@ using namespace std;
 static string defaultMessage = "INSANITY! -- GOOD LUCK";
 
 //a call back for peg clicking
-static peg_click(Peg *peg, Insanity *puzzle)
+static void peg_callback(Peg *peg, Insanity *puzzle)
 {
-
+    puzzle->peg_click(peg);
 }
 
 //constructor
@@ -49,7 +49,8 @@ Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
             pegs[i]->color(GREEN);
             pegs[i]->present(true);
         }
-        pegs[i]->user_data(i);
+        pegs[i]->user_data((void *) i);
+        pegs[i]->callback((Fl_Callback*) peg_callback, this);
     }
     
     //set up initial selection
@@ -73,90 +74,34 @@ Insanity::~Insanity()
 }
 
 
-//widget functions
-/*
-void 
-Insanity::handleEvent(Event *e)
-{
-    //we only want keyboard events here!
-    if(e->type() != "keyboard") { return; }
-    
-    //assume the default message
-    message=defaultMessage;
-    
-    KeyboardEvent *k = (KeyboardEvent *) e;
-    
-    switch(k->key()) {
-        case ESC:
-            //exit the application
-            ((Application *) parent())->running(false);
-            break;
-            
-        case LEFT:
-            //move the cursor left
-            selectPeg(cursor-1);
-            break;
-            
-        case RIGHT:
-            //move the cursor right
-            selectPeg(cursor+1);
-            break;
-            
-        case ENTER:
-            //either mark the peg or move the peg
-            if(toMove == -1) {
-                //if the peg is present, select it for moving!
-                if(pegs[cursor]->present()) {
-                    toMove = cursor;
-                }
-            } else {
-                if(not move(toMove, cursor)) {
-                    message = "Invalid Move!";
-                }
-                toMove = -1;
-            }
-            break;
-            
-        case 's':
-            solve();
-            break;
-    }
-    
-    display();
-}
-
-
-void 
-Insanity::display()
-{
-    //draw the box
-    cout << cursorPosition(x(), y())
-         << '+' << setfill('-') << setw(width()-1) << '+' << setfill(' ')
-         << cursorPosition(x(), y()+1) << '|' << setw(width()-1) << '|'
-         << cursorPosition(x(), y()+2) << '|' << setw(width()-1) << '|'
-         << cursorPosition(x(), y()+3) << '|' << setw(width()-1) << '|'
-         << cursorPosition(x(), y()+4) 
-         << '+' << setfill('-') << setw(width()-1) << '+' << setfill(' ');
-    
-    //display the pegs
-    for(int i=0; i<pegs.size(); i++) {
-        pegs[i]->display();
-    }
-    
-    //display the move marker
-    if(toMove != -1) {
-        cout << cursorPosition(pegs[toMove]->x()+1, pegs[toMove]->y() + 1) << '^';
-    }
-    
-    //display the message
-    cout << cursorPosition(x(), y()+5) << left << setw(width()) << message << right;
-    
-    //flush the buffer
-    cout.flush();
-}
-*/
 
 //insanity functions
+void 
+Insanity::peg_click(Peg *peg)
+{
+    message->value("");
+
+    //find the peg
+    int cursor;
+    for(cursor=0; cursor < pegs.size(); cursor++) {
+        if(peg == pegs[cursor]) { break; }
+    }
+
+    //either mark the peg or move the peg
+    if(to_move == -1) {
+        //if the peg is present, select it for moving!
+        if(pegs[cursor]->present()) {
+            to_move = cursor;
+            pegs[cursor]->selected(true);
+        }
+     } else {
+        if(not move(to_move, cursor)) {
+            message->value("Invalid Move!");
+        }
+        pegs[to_move]->selected(false);
+        to_move = -1;
+    }
+}
 
 //move the cursor to a peg
 void 

@@ -1,4 +1,4 @@
-CXXFLAGS=`fltk-config --cxxflags`
+CXXFLAGS=`fltk-config --cxxflags` -g
 LDFLAGS=`fltk-config --ldflags`
 TARGETS=peg_test pegPuzzles
 CC=g++
