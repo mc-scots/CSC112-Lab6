@@ -18,6 +18,12 @@
 using namespace std;
 static string defaultMessage = "INSANITY! -- GOOD LUCK";
 
+//a call back for peg clicking
+static peg_click(Peg *peg, Insanity *puzzle)
+{
+
+}
+
 //constructor
 Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
 {
@@ -43,6 +49,7 @@ Insanity::Insanity(int x, int y, int w, int h) : Fl_Group(x,y,w,h)
             pegs[i]->color(GREEN);
             pegs[i]->present(true);
         }
+        pegs[i]->user_data(i);
     }
     
     //set up initial selection
